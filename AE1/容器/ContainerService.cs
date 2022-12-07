@@ -25,8 +25,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using AE1.工站;
 using AE1.流程;
+using AE1.流程.拦截器;
+using AE1.流程.拦截器.特性标签;
+using Castle.Core;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 
@@ -39,12 +43,31 @@ namespace AE1.容器 {
     /// </summary>
     public static class ContainerService {
         public static WindsorContainer Container = new WindsorContainer();
+
         static ContainerService() {
-            Container.Register(Component.For<流入提升升降机>().Named("入口流入升降机").IsDefault(),
-                                            Component.For<流入提升升降机Flow>(),
-                                            Component.For<Form控制>()
-                );
+            Container.Register(Component.For<流入许可Attribute>());
+            Container.Register(Component.For<流入提升升降机>());
+            Container.Register(Component.For<流入许可Interceptor>());
+            Container.Register( Component.For<流入提升升降机Flow>()
+                                                                                .DependsOn(Dependency.OnComponent(typeof(流入提升升降机), typeof(流入提升升降机)))
+                                                                                .Interceptors(InterceptorReference.ForType<流入许可Interceptor>())
+                                                                                .SelectedWith(new 流入许可选择器())
+                                                                                .First);
+
+
+
+
+
+            /* Container.Register(Component.For<流入提升升降机Flow>()
+                                                                                 .DependsOn(Dependency.OnComponent(typeof(流入提升升降机), typeof(流入提升升降机)))
+                                                                                 .Interceptors(InterceptorReference.ForKey("流入许可"))
+                                                                                 .SelectedWith(new 流入许可选择器())
+                                                                                 .First
+                                                                                 );*/
+            Container.Register(Component.For<Form控制>());
+
         }
+
 
     }
 }

@@ -30,6 +30,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AE1.容器;
 using AE1.工站;
 using AE1.流程;
 
@@ -38,8 +39,6 @@ namespace AE1 {
         public Form控制() {
             InitializeComponent();
         }
-
-        public 流入提升升降机Flow Flow;
 
         /// <summary>
         /// 设置信号
@@ -74,9 +73,9 @@ namespace AE1 {
         /// <param name="signal">新信号</param>
         /// <returns></returns>
         private async Task SendPulseSignal(string signal) {
-            Flow.State = signal;
+            ContainerService.Container.Resolve<流入提升升降机Flow>().State = signal;
             await Task.Delay(1000);
-            Flow.State = "Idle";
+            ContainerService.Container.Resolve<流入提升升降机Flow>().State = "Idle";
         }
     }
 }

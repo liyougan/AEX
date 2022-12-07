@@ -28,18 +28,17 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AE1.工站;
+using AE1.流程.拦截器.特性标签;
 
 namespace AE1.流程 {
     /// <summary>
     /// 流入提升升降机Flow 的摘要说明
     /// </summary>
     public class 流入提升升降机Flow {
-
         public 流入提升升降机Flow(流入提升升降机 station) {
             this.流入提升升降机 = station;
-            Init();
         }
-
+     
         /*=============================================[-- 参数 --]=============================================*/
         public 流入提升升降机 流入提升升降机 { get; set; }
         private Step _currentStep = Step.Idle;
@@ -67,7 +66,7 @@ namespace AE1.流程 {
 
         /*=============================================[-- AutoFlow --]=============================================*/
         public void Run() {
-            _currentStep = Step.判断流入到位;
+            _currentStep = Step.判断流入许可;
             var t = new Task(() => {
                 while (true) {
                     _stepDict[_currentStep]?.Invoke(this, null);
@@ -78,36 +77,35 @@ namespace AE1.流程 {
         }
 
         #region AutoFlow
-        public void 判断流入许可() {
-            if (State.Equals("收到流入许可信号")) {
-                Console.WriteLine("判断流入许可--OK");
-                _currentStep = Step.流入;
-            }
 
+        [流入许可]
+        public virtual void 判断流入许可() {
+            Console.WriteLine("判断流入许可--OK");
+            _currentStep = Step.流入;
         }
 
-        public void 流入() {
+        public virtual void 流入() {
             Console.WriteLine("流入电机正转");
             _currentStep = Step.判断流入到位;
         }
 
-        public void 判断流入到位() {
+        public virtual void 判断流入到位() {
             if (State.Equals("收到到位信号")) {
                 Console.WriteLine("判断流入到位--OK");
                 _currentStep = Step.扫码;
             }
         }
-        public void 扫码() {
+        public virtual void 扫码() {
             Console.WriteLine("扫码");
             _currentStep = Step.等待取料;
         }
-        public void 等待取料() {
+        public virtual void 等待取料() {
             if (State.Equals("收到取料完成信号")) {
                 Console.WriteLine("等待取料");
                 _currentStep = Step.下降;
             }
         }
-        public void 下降() {
+        public virtual void 下降() {
             Console.WriteLine("下降");
             _currentStep = Step.等待流出许可;
         }
@@ -144,7 +142,7 @@ namespace AE1.流程 {
 
 
         /*=============================================[-- 辅助 --]=============================================*/
-        private void Init() {
+        public void Init() {
             _stepDict = new Dictionary<Step, MethodInfo>();
             var methods = this.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
             foreach (MethodInfo methodInfo in methods) {
