@@ -39,23 +39,44 @@ namespace AE1 {
             InitializeComponent();
         }
 
-        private 流入提升升降机Flow flow;
+        public 流入提升升降机Flow Flow;
 
+        /// <summary>
+        /// 设置信号
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="args"></param>
         private async void SetSignal(object sender, EventArgs args) {
             var btnInfo = (sender as Button).Text;
             switch (btnInfo) {
                 case "给流入许可":
-                    await SendPulseSignal("收到流入信号");
+                    await SendPulseSignal("收到流入许可信号");
+                    break;
+                case "给流入到位":
+                    await SendPulseSignal("收到到位信号");
+                    break;
+                case "给取料完成信号":
+                    await SendPulseSignal("收到取料完成信号");
+                    break;
+                case "给流出许可":
+                    await SendPulseSignal("收到流出信号");
+                    break;
+                case "给流出完成":
+                    await SendPulseSignal("收到流出完成信号");
                     break;
                 default:
                     break;
             }
         }
-
+        /// <summary>
+        /// 发送信号
+        /// </summary>
+        /// <param name="signal">新信号</param>
+        /// <returns></returns>
         private async Task SendPulseSignal(string signal) {
-            flow.State = signal;
+            Flow.State = signal;
             await Task.Delay(1000);
-            flow.State = "Idle";
+            Flow.State = "Idle";
         }
     }
 }
