@@ -80,38 +80,49 @@ namespace AE1.流程 {
         #region AutoFlow
         public void 判断流入许可() {
             Console.WriteLine("判断流入许可--OK");
+            _currentStep = Step.流入;
         }
 
         public void 流入() {
             Console.WriteLine("流入电机正转");
+            _currentStep = Step.判断流入到位;
         }
 
         public void 判断流入到位() {
             Console.WriteLine("判断流入到位--OK");
+            _currentStep = Step.扫码;
         }
         public void 扫码() {
             Console.WriteLine("扫码");
+            _currentStep = Step.等待取料;
         }
         public void 等待取料() {
             Console.WriteLine("等待取料");
+            _currentStep = Step.下降;
         }
         public void 下降() {
             Console.WriteLine("下降");
+            _currentStep = Step.等待流出许可;
         }
         public void 等待流出许可() {
             Console.WriteLine("等待流出许可--OK");
+            _currentStep = Step.流出;
         }
         public void 流出() {
             Console.WriteLine("流出");
+            _currentStep = Step.等待流出完成;
         }
         public void 等待流出完成() {
             Console.WriteLine("等待流出完成");
+            _currentStep = Step.上升;
         }
         public void 上升() {
             Console.WriteLine("上升");
+            _currentStep = Step.完成;
         }
         public void 完成() {
             Console.WriteLine("完成");
+            _currentStep = Step.判断流入许可;
         }
         #endregion
 
