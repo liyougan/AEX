@@ -28,8 +28,9 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using AE1.工站;
 using AE1.流程;
-using AE1.流程.拦截器;
-using AE1.流程.拦截器.特性标签;
+using AE1.流程.拦截;
+using AE1.流程.拦截.拦截器;
+using AE1.流程.拦截.特性标签;
 using Castle.Core;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
@@ -45,25 +46,21 @@ namespace AE1.容器 {
         public static WindsorContainer Container = new WindsorContainer();
 
         static ContainerService() {
-            Container.Register(Component.For<流入许可Attribute>());
             Container.Register(Component.For<流入提升升降机>());
+
             Container.Register(Component.For<流入许可Interceptor>());
-            Container.Register( Component.For<流入提升升降机Flow>()
-                                                                                .DependsOn(Dependency.OnComponent(typeof(流入提升升降机), typeof(流入提升升降机)))
-                                                                                .Interceptors(InterceptorReference.ForType<流入许可Interceptor>())
-                                                                                .SelectedWith(new 流入许可选择器())
-                                                                                .First);
+            Container.Register(Component.For<流入到位Interceptor>());
+            Container.Register(Component.For<取料完成Interceptor>());
+            Container.Register(Component.For<流出信号Interceptor>());
+            Container.Register(Component.For<流出完成Interceptor>());
 
+            //Container.Register(Component.For<拦截Selector>().LifeStyle.Transient);
 
+            Container.Register(Component.For<流入提升升降机Flow>()
+                                                                                .Interceptors(typeof(流入许可Interceptor), typeof(流入到位Interceptor), typeof(取料完成Interceptor), typeof(流出信号Interceptor), typeof(流出完成Interceptor))
+                                                                                .SelectInterceptorsWith(new 拦截Selector())
+                                                                                 );
 
-
-
-            /* Container.Register(Component.For<流入提升升降机Flow>()
-                                                                                 .DependsOn(Dependency.OnComponent(typeof(流入提升升降机), typeof(流入提升升降机)))
-                                                                                 .Interceptors(InterceptorReference.ForKey("流入许可"))
-                                                                                 .SelectedWith(new 流入许可选择器())
-                                                                                 .First
-                                                                                 );*/
             Container.Register(Component.For<Form控制>());
 
         }

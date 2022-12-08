@@ -49,19 +49,19 @@ namespace AE1 {
             var btnInfo = (sender as Button).Text;
             switch (btnInfo) {
                 case "给流入许可":
-                    await SendPulseSignal("收到流入许可信号");
+                    await SendPulseSignal( 流入提升升降机Flow.State.收到流入许可信号);
                     break;
                 case "给流入到位":
-                    await SendPulseSignal("收到到位信号");
+                    await SendPulseSignal( 流入提升升降机Flow.State.收到到位信号);
                     break;
                 case "给取料完成信号":
-                    await SendPulseSignal("收到取料完成信号");
+                    await SendPulseSignal( 流入提升升降机Flow.State.收到取料完成信号);
                     break;
                 case "给流出许可":
-                    await SendPulseSignal("收到流出信号");
+                    await SendPulseSignal( 流入提升升降机Flow.State.收到流出信号);
                     break;
                 case "给流出完成":
-                    await SendPulseSignal("收到流出完成信号");
+                    await SendPulseSignal( 流入提升升降机Flow.State.收到流出完成信号);
                     break;
                 default:
                     break;
@@ -72,10 +72,10 @@ namespace AE1 {
         /// </summary>
         /// <param name="signal">新信号</param>
         /// <returns></returns>
-        private async Task SendPulseSignal(string signal) {
-            ContainerService.Container.Resolve<流入提升升降机Flow>().State = signal;
+        private async Task SendPulseSignal(流入提升升降机Flow.State signal) {
+            ContainerService.Container.Resolve<流入提升升降机Flow>().CurrentState = signal;
             await Task.Delay(1000);
-            ContainerService.Container.Resolve<流入提升升降机Flow>().State = "Idle";
+            ContainerService.Container.Resolve<流入提升升降机Flow>().CurrentState = 流入提升升降机Flow.State.Idle;
         }
     }
 }

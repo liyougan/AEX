@@ -66,9 +66,18 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="容器\ContainerService.cs" />
     <Compile Include="工站\流入提升升降机.cs" />
-    <Compile Include="流程\拦截器\流入许可Interceptor.cs" />
-    <Compile Include="流程\拦截器\特性标签\IAttributeProcedure.cs" />
-    <Compile Include="流程\拦截器\特性标签\流入许可Attribute.cs" />
+    <Compile Include="流程\拦截\拦截器\取料完成Interceptor.cs" />
+    <Compile Include="流程\拦截\拦截器\流入到位Interceptor.cs" />
+    <Compile Include="流程\拦截\拦截器\流入许可Interceptor.cs" />
+    <Compile Include="流程\拦截\拦截器\流出信号Interceptor.cs" />
+    <Compile Include="流程\拦截\拦截器\流出完成Interceptor.cs" />
+    <Compile Include="流程\拦截\拦截Selector.cs" />
+    <Compile Include="流程\拦截\特性标签\IAttributeProcedure.cs" />
+    <Compile Include="流程\拦截\特性标签\取料完成Attribute.cs" />
+    <Compile Include="流程\拦截\特性标签\流入到位Attribute.cs" />
+    <Compile Include="流程\拦截\特性标签\流入许可Attribute.cs" />
+    <Compile Include="流程\拦截\特性标签\流出信号Attribute.cs" />
+    <Compile Include="流程\拦截\特性标签\流出完成Attribute.cs" />
     <Compile Include="流程\流入提升升降机Flow.cs" />
   </ItemGroup>
   <ItemGroup>

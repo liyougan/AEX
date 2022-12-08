@@ -26,18 +26,16 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using AE1.流程.拦截器.特性标签;
+using AE1.流程.拦截.特性标签;
 using Castle.DynamicProxy;
 
-namespace AE1.流程.拦截器 {
+namespace AE1.流程.拦截 {
     /// <summary>
     /// 流入许可Interceptor 的摘要说明
     /// </summary>
     public class 流入许可Interceptor : IInterceptor {
         public void Intercept(IInvocation invocation) {
-            var 流入attr = invocation.MethodInvocationTarget
-                                                                                          .GetCustomAttributes<流入许可Attribute>(true)
-                                                                                          .Where(p => p.GetType() == typeof(流入许可Attribute)).FirstOrDefault();
+            var 流入attr = invocation.MethodInvocationTarget.GetCustomAttributes<流入许可Attribute>(true).FirstOrDefault();
             if (流入attr == null)
                 return;
             流入attr.Process(invocation);
@@ -45,12 +43,5 @@ namespace AE1.流程.拦截器 {
     }
 
 
-    public class 流入许可选择器 : IInterceptorSelector {
-        public IInterceptor[] SelectInterceptors(Type type, MethodInfo method, IInterceptor[] interceptors) {
-            if (method.Name == "判断流入许可") {
-                return interceptors;
-            }
-            return interceptors.Where(p => p.GetType() != typeof(流入许可Interceptor)).ToArray();
-        }
-    }
+
 }

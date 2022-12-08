@@ -2,11 +2,11 @@
 /*----------------------------------------------------------------
  * CLR 版本：4.0.30319.42000
  * 公司名称：BZ
- * 命名空间：AE1.流程.拦截器.特性标签
- * 文  件 名：IAttributeProcedure
+ * 命名空间：AE1.流程.拦截.拦截器
+ * 文  件 名：流出完成Interceptor
  * 
  * 创  建 者：liyougan
- * 创建时间：2022/12/7 14:47:28
+ * 创建时间：2022/12/8 9:48:41
  * 版      本：V1.0.0.0
  * 描      述：
  *
@@ -19,18 +19,27 @@
  *----------------------------------------------------------------*/
 #endregion << 版 本 注 释 >>
 
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using AE1.流程.拦截.特性标签;
 using Castle.DynamicProxy;
 
-namespace AE1.流程.拦截器.特性标签 {
+
+namespace AE1.流程.拦截.拦截器 {
     /// <summary>
-    /// IAttributeProcedure 的摘要说明
+    /// 流出完成Interceptor 的摘要说明
     /// </summary>
-    public interface IAttributeProcedure {
-        void Process(IInvocation invocation);
+    public class 流出完成Interceptor : IInterceptor {
+        public void Intercept(IInvocation invocation) {
+            var attr = invocation.MethodInvocationTarget.GetCustomAttributes<流出完成Attribute>(true).FirstOrDefault();
+            if (attr == null)
+                return;
+            attr.Process(invocation);
+        }
     }
 }

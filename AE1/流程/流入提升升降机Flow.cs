@@ -28,7 +28,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using AE1.工站;
-using AE1.流程.拦截器.特性标签;
+using AE1.流程.拦截.特性标签;
 
 namespace AE1.流程 {
     /// <summary>
@@ -38,7 +38,7 @@ namespace AE1.流程 {
         public 流入提升升降机Flow(流入提升升降机 station) {
             this.流入提升升降机 = station;
         }
-     
+
         /*=============================================[-- 参数 --]=============================================*/
         public 流入提升升降机 流入提升升降机 { get; set; }
         private Step _currentStep = Step.Idle;
@@ -62,7 +62,16 @@ namespace AE1.流程 {
             异常处理,
             异常处理完成
         }
-        public string State { get; set; } = "Idle";
+        public enum State {
+            Idle,
+            收到流入许可信号,
+            收到到位信号,
+            收到取料完成信号,
+            收到流出信号,
+            收到流出完成信号,
+
+        }
+        public State CurrentState { get; set; } = State.Idle;
 
         /*=============================================[-- AutoFlow --]=============================================*/
         public void Run() {
@@ -89,48 +98,52 @@ namespace AE1.流程 {
             _currentStep = Step.判断流入到位;
         }
 
+        [流入到位]
         public virtual void 判断流入到位() {
-            if (State.Equals("收到到位信号")) {
-                Console.WriteLine("判断流入到位--OK");
-                _currentStep = Step.扫码;
-            }
+            Console.WriteLine("判断流入到位--OK");
+            _currentStep = Step.扫码;
         }
+
         public virtual void 扫码() {
             Console.WriteLine("扫码");
             _currentStep = Step.等待取料;
         }
+
+        [取料完成]
         public virtual void 等待取料() {
-            if (State.Equals("收到取料完成信号")) {
-                Console.WriteLine("等待取料");
-                _currentStep = Step.下降;
-            }
+            Console.WriteLine("等待取料");
+            _currentStep = Step.下降;
         }
+
         public virtual void 下降() {
             Console.WriteLine("下降");
             _currentStep = Step.等待流出许可;
         }
-        public void 等待流出许可() {
-            if (State.Equals("收到流出信号")) {
-                Console.WriteLine("等待流出许可--OK");
-                _currentStep = Step.流出;
-            }
+
+        [流出信号]
+        public virtual void 等待流出许可() {
+            Console.WriteLine("等待流出许可--OK");
+            _currentStep = Step.流出;
 
         }
-        public void 流出() {
+
+        public virtual void 流出() {
             Console.WriteLine("流出");
             _currentStep = Step.等待流出完成;
         }
-        public void 等待流出完成() {
-            if (State.Equals("收到流出完成信号")) {
-                Console.WriteLine("等待流出完成");
-                _currentStep = Step.上升;
-            }
+
+        [流出完成]
+        public virtual void 等待流出完成() {
+            Console.WriteLine("等待流出完成");
+            _currentStep = Step.上升;
         }
-        public void 上升() {
+
+        public virtual void 上升() {
             Console.WriteLine("上升");
             _currentStep = Step.完成;
         }
-        public void 完成() {
+
+        public virtual void 完成() {
             Console.WriteLine("完成");
             _currentStep = Step.判断流入许可;
         }
